@@ -54,7 +54,7 @@ end
 
 def get_ril_links(ril_user, ril_pass)
   url = "https://readitlaterlist.com/v2/get?state=0&username=#{ril_user}&password=#{ril_pass}&apikey=3b2p1o6aA560xh9611g4540C6bd8YaX4&state=unread"
-  JSON.parse(open(url).read)["list"].values.collect{|i| [ i["url"], i["title"], i["time_updated"] ]}
+  JSON.parse(open(url).read)["list"].values.collect { |i| [i["url"], i["title"], i["time_updated"]] }
 end
 
 def add_link_to_instapaper(insta_user, insta_pass, link, title=nil)
@@ -71,16 +71,16 @@ end
 
 def ask_for_credentials
   @ril_user = ask("ReadItLater username:")
-  @ril_pass = ask("ReadItLater password:") {|q| q.echo = false}
+  @ril_pass = ask("ReadItLater password:") { |q| q.echo = false }
 
   @insta_user = ask("Instapaper username/email address:")
-  @insta_pass = ask("Instapaper password (optional):") {|q| q.echo = false}
+  @insta_pass = ask("Instapaper password (optional):") { |q| q.echo = false }
 end
 
 # Main script execution
 ask_for_credentials
 
-ril_links = get_ril_links(@ril_user,@ril_pass).sort_by{|e| e[2]}
+ril_links = get_ril_links(@ril_user, @ril_pass).sort_by{ |e| e[2] }
 
 success_count = 0
 failed_urls = []
@@ -90,7 +90,7 @@ progress = ProgressBar.new("Sending links to Instapaper", ril_links.size)
 ril_links.each do |entry|
   link = entry[0]
   title = entry[1]
-  result = add_link_to_instapaper(@insta_user,@insta_pass, link, title)
+  result = add_link_to_instapaper(@insta_user, @insta_pass, link, title)
   progress.inc
 
   case result
