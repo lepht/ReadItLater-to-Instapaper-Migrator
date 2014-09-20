@@ -88,7 +88,7 @@ pocket_links = get_pocket_links(@pocket_user,@pocket_pass).sort_by{|e| e[2]}
 success_count = 0
 failed_urls = []
 
-progress = ProgressBar.new("Sending links to Instapaper", pocket_links.size)
+progress = ProgressBar.new("Sending #{pocket_links.size} links", pocket_links.size)
 
 pocket_links.each do |entry|
   link = entry[0]
