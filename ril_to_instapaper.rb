@@ -103,7 +103,10 @@ end
 
 progress.finish
 
-puts ["Migration complete!", "Links transferred to Instapaper: #{success_count}", "Links failed: #{failed_urls.size}"].join("\t")
+puts "Migration complete!", <<RESULTS
+	Links transferred to Instapaper: #{success_count}
+	Links failed: #{failed_urls.size}
+RESULTS
 
 if failed_urls.any?
   puts "Failed links were: "
