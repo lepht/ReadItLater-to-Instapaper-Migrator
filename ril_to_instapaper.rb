@@ -1,12 +1,17 @@
 #!/usr/bin/env ruby
 require 'rubygems'
+
 require 'progressbar'
 require 'uri'
 require 'open-uri'
 require 'json'
 require 'highline/import'
 
-def convert_url(link)
+# 'Cleans up' a link, changing it to print version (when possible) and removing any unnessary/unwanted URL fragments
+# 
+# @param link [String] the URL to process
+# @return [String] the cleaned up URL
+def cleanup_link(link)
   url = link;
   # habrahabr.ru
   if(link.match(/:\/\/habrahabr\.ru/))
@@ -43,10 +48,14 @@ def convert_url(link)
   return url;
 end
 
-def get_ril_links(ril_user,ril_pass)
-  ril_url = "https://readitlaterlist.com/v2/get?state=0&username=#{ril_user}&password=#{ril_pass}&apikey=3b2p1o6aA560xh9611g4540C6bd8YaX4&state=unread"
-  ril_link_objects = JSON.parse(open(ril_url).read)["list"].values
-  ril_link_urls = ril_link_objects.collect{|i| [ i["url"], i["title"], i["time_updated"] ]}
+# Retrieves a list of unread links from the Pocket APIs
+#
+# @param pocket_user [String] user to retrieve links for
+# @param pocket_password [String] password for that user
+def get_pocket_links(pocket_user, pocket_password)
+  api_url = "https://readitlaterlist.com/v2/get?state=0&username=#{pocket_user}&password=#{pocket_password}&apikey=3b2p1o6aA560xh9611g4540C6bd8YaX4&state=unread"
+  pocket_link_objects = JSON.parse(open(api_url).read)["list"].values
+  pocket_link_urls = pocket_link_objects.collect{|i| [ i["url"], i["title"], i["time_updated"] ]}
 end
 
 def add_link_to_instapaper(insta_user, insta_pass, link, title=nil)
@@ -61,9 +70,10 @@ def add_link_to_instapaper(insta_user, insta_pass, link, title=nil)
   end
 end
 
+# Prompts the user for their pocket and instapaper credentials
 def ask_for_user_creds
-  @ril_user = ask("ReadItLater username:")
-  @ril_pass = ask("ReadItLater password:") {|q| q.echo = false}
+  @pocket_user = ask("Pocket username:")
+  @pocket_pass = ask("Pocket password:") {|q| q.echo = false}
 
   @insta_user = ask("Instapaper username/email address:")
   @insta_pass = ask("Instapaper password (optional):") {|q| q.echo = false}
@@ -72,14 +82,14 @@ end
 # Main script execution
 ask_for_user_creds
 
-ril_links = get_ril_links(@ril_user,@ril_pass).sort_by{|e| e[2]}
+pocket_links = get_pocket_links(@pocket_user,@pocket_pass).sort_by{|e| e[2]}
 
 success_count = 0
 failed_urls = []
 
-progress = ProgressBar.new("Sending links to Instapaper", ril_links.size)
+progress = ProgressBar.new("Sending links to Instapaper", pocket_links.size)
 
-ril_links.each do |entry|
+pocket_links.each do |entry|
   link = entry[0]
   title = entry[1]
   result = add_link_to_instapaper(@insta_user,@insta_pass, link, title)
@@ -94,7 +104,7 @@ end
 
 progress.finish
 
-#Print results
+# Print results
 puts "Migration complete!
     \tLinks transferred to Instapaper: #{success_count}
     \tLinks failed: #{failed_urls.size}"
