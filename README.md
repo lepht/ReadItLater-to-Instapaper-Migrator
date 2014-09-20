@@ -1,5 +1,3 @@
-# ReadItLater-to-Instapaper Migrator
-
 A commandline tool to transfer unread links from [Pocket](http://getpocket.com) (formerly ReadItLater) to [Instapaper](http://instapaper.com).
 
 ## Usage
