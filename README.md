@@ -1,8 +1,10 @@
-A commandline tool to transfer unread links from [Pocket](http://getpocket.com) (formerly ReadItLater) to [Instapaper](http://instapaper.com)
+# ReadItLater-to-Instapaper Migrator
 
-## Usage ##
-Just run `ril_to_instapaper.rb` from the commandline and you will be prompted for your username and password for both services. Your credentials won't be stored anywhere, and must be entered each time you run the script.
+A commandline tool to transfer unread links from [Pocket](http://getpocket.com) (formerly ReadItLater) to [Instapaper](http://instapaper.com).
 
-All 'unread' links will then be transferred from your ReadItLater account to your Instapaper account, and a result summary is printed.
+## Usage
+Run `ril_to_instapaper.rb` and enter the username and password for both services when prompted. Credentials aren't stored and must be re-entered each time you execute the script.
+
+All 'unread' links are transferred from the given Pocket account to the Instapaper account's reading list and a result summary is printed.
 
 Glad to help, nfp, etc.
