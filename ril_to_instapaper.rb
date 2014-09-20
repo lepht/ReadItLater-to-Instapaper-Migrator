@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 require 'rubygems'
 
 require 'progressbar'
@@ -55,11 +56,11 @@ end
 def get_pocket_links(pocket_user, pocket_password)
   api_url = "https://readitlaterlist.com/v2/get?state=0&username=#{pocket_user}&password=#{pocket_password}&apikey=3b2p1o6aA560xh9611g4540C6bd8YaX4&state=unread"
   pocket_link_objects = JSON.parse(open(api_url).read)["list"].values
-  pocket_link_urls = pocket_link_objects.collect{|i| [ i["url"], i["title"], i["time_updated"] ]}
+  return pocket_link_objects.collect{|i| [ i["url"], i["title"], i["time_updated"] ]}
 end
 
 def add_link_to_instapaper(insta_user, insta_pass, link, title=nil)
-  insta_url = "https://www.instapaper.com/api/add?username=#{insta_user}&url=#{URI.escape(convert_url(link))}"
+  insta_url = "https://www.instapaper.com/api/add?username=#{insta_user}&url=#{URI.escape(cleanup_link(link))}"
   insta_url += "&title=#{URI.escape(title)}" unless title.nil?
   insta_url += "&password=#{insta_pass}" unless insta_pass.empty?
 
