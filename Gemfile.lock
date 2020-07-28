@@ -2,7 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     highline (1.6.11)
-    json (1.6.5)
+    json (2.3.0)
     progressbar (0.10.0)
 
 PLATFORMS
